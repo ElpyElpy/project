@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+     
+}
+
+li, a, button{
+    font-family: 'DotGothic16', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+}
+
+header{
+    display: flex;
+    justify-content: flex-end; /*flex-end*/
+    align-items: center;
+    padding: 20px 10%;
+}
+
+/*NAV BAR*/
+.logo{
+    cursor: pointer;
+    width: 100%;
+    max-width: 100px;
+    margin-right: auto;
+    
+}
+
+.nav__links{
+    list-style: none;
+}
+
+
+.nav__links li {
+    display: inline-block;
+    padding: 0px 20px;
+    margin-top: 15px;
+}
+
+.nav__links li a{
+    transition: all 0.3s ease 0s;
+}
+
+.nav__links li a:hover{
+    color: rgb(165, 165, 165);
+}
+
+button{
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    border: dashed;
+    border-radius: 0px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+button:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+/*END OF NAV BAR*/
+
+/*MAIN PAGE*/
+#welcome_message{
+    font-size: 62px;
+    color: white;
+    font-weight: bold;
+}
+
+#second_message{
+    margin: 20px;
+    font-size: 28px;
+    color: white;
+    font-weight: normal;
+}
+
+/*END OF MAIN PAGE*/
+
+
+/*FOOTER*/
+footer a{
+    font-size: 12px;
+}
+/*END OF FOOTER*/
+
+
