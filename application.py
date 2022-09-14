@@ -23,15 +23,25 @@ application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
 if 'ebdb' in os.environ:
+    print(f"ENVIRONMENT CREDENTIAL VARS IN USE")
     RDS_HOSTNAME = os.environ["RDS_HOSTNAME"]
+    print(f"HOSTNAME: {RDS_HOSTNAME}")
     RDS_USERNAME = os.environ["RDS_USERNAME"]
+    print(f"USERNAME: {RDS_USERNAME}")
     RDS_PASSWORD = os.environ["RDS_PASSWORD"]
+    print(f"PWD: {RDS_PASSWORD}")
     RDS_DB_NAME = os.environ["RDS_DB_NAME"]
+    print(f"DB NAME: {RDS_DB_NAME}")
     connection = create_db_connection(
         RDS_HOSTNAME, RDS_USERNAME, RDS_PASSWORD, RDS_DB_NAME)
 else:
+    print(f"LOCAL CREDENTIAL VARS IN USE")
+    RDS_HOSTNAME = ""
+    RDS_USERNAME = ""
+    RDS_PASSWORD = ""
+    RDS_DB_NAME = "ebdb"
     connection = create_db_connection(
-        "hostname", "username", "password", "db_name")
+        RDS_HOSTNAME, RDS_USERNAME, RDS_PASSWORD, RDS_DB_NAME)
 
 
 @application.after_request
