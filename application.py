@@ -1,5 +1,5 @@
 import os
-
+import logging
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -23,6 +23,7 @@ application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
 if 'ebdb' in os.environ:
+    logging.warning('ENVIRONMENT CREDENTIAL VARS IN USE')
     print(f"ENVIRONMENT CREDENTIAL VARS IN USE")
     RDS_HOSTNAME = os.environ["RDS_HOSTNAME"]
     print(f"HOSTNAME: {RDS_HOSTNAME}")
@@ -35,7 +36,7 @@ if 'ebdb' in os.environ:
     connection = create_db_connection(
         RDS_HOSTNAME, RDS_USERNAME, RDS_PASSWORD, RDS_DB_NAME)
 else:
-    print(f"LOCAL CREDENTIAL VARS IN USE")
+    logging.warning('LOCAL CREDENTIAL VARS IN USE')
     RDS_HOSTNAME = ""
     RDS_USERNAME = ""
     RDS_PASSWORD = ""
