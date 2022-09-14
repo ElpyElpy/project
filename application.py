@@ -22,7 +22,7 @@ application.config["SESSION_PERMANENT"] = False
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
-if 'ebdb' in os.environ:
+if 'RDS_DB_NAME' in os.environ:
     logging.warning('ENVIRONMENT CREDENTIAL VARS IN USE')
     print(f"ENVIRONMENT CREDENTIAL VARS IN USE")
     RDS_HOSTNAME = os.environ["RDS_HOSTNAME"]
