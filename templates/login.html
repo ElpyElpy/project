@@ -5,13 +5,28 @@
 {% endblock %}
 
 {% block main %}
+
+{% if alert == "missing name" %}
+    <div class="alert alert-danger" role="alert">
+        Enter username
+    </div>
+{% elif alert == "missing password" %}
+    <div class="alert alert-danger" role="alert">
+        Enter password
+    </div>
+{% elif alert == "Wrong pwd" %}
+    <div class="alert alert-danger" role="alert">
+        Wrong user-name or password
+    </div>
+{% endif %}
+
     <form action="/login" method="post">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Discord: Account#0000" type="text">
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+        <button type="submit">Log-in</button>
     </form>
 {% endblock %}

@@ -1,12 +1,16 @@
 import os
 
-from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from helpers import complete_registration
+from helpers import complete_registration, complete_login
+from dbconnect import create_db_connection, execute_query
+
+import mysql.connector
+from mysql.connector import Error
+import pandas as pd
 
 application = Flask(__name__)
 
@@ -17,6 +21,17 @@ application.config["TEMPLATES_AUTO_RELOAD"] = True
 application.config["SESSION_PERMANENT"] = False
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
+
+if 'ebdb' in os.environ:
+    RDS_HOSTNAME = os.environ["RDS_HOSTNAME"]
+    RDS_USERNAME = os.environ["RDS_USERNAME"]
+    RDS_PASSWORD = os.environ["RDS_PASSWORD"]
+    RDS_DB_NAME = os.environ["RDS_DB_NAME"]
+    connection = create_db_connection(
+        RDS_HOSTNAME, RDS_USERNAME, RDS_PASSWORD, RDS_DB_NAME)
+else:
+    connection = create_db_connection(
+        "hostname", "username", "password", "db_name")
 
 
 @application.after_request
@@ -42,9 +57,21 @@ def register():
     if request.method == "POST":
 
         # Check registration parameters and complete registration
-        return complete_registration(request.form.get("username"), request.form.get("password"), request.form.get("confirmation"))
+        return complete_registration(request.form.get("username"), request.form.get("password"), request.form.get("confirmation"), connection)
 
     return render_template("register.html")
+
+
+@application.route("/login", methods=["GET", "POST"])
+def login():
+    # Forget any user_id
+    session.clear()
+
+    if request.method == "POST":
+        # Check registration parameters and complete registration
+        return complete_login(request.form.get("username"), request.form.get("password"), connection)
+
+    return render_template("login.html")
 
 
 @application.route("/logout")
