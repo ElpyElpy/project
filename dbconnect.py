@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 import pandas as pd
+import logging
 
 
 def create_db_connection(host_name, user_name, user_password, db_name):
@@ -12,7 +13,7 @@ def create_db_connection(host_name, user_name, user_password, db_name):
             passwd=user_password,
             database=db_name
         )
-        print("MySQL Database connection successful")
+        logging.critical('DB CONNECTION - SUCCESS')
     except Error as err:
         print(f"Error: '{err}'")
 

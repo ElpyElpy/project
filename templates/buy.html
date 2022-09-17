@@ -1,0 +1,214 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+
+<div class="invest">
+    <div class="left_side">
+        <div class="quote_token">
+            <form id="form_buy" action="/buy" method="post">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control
+                        mx-auto w-auto" id="token" name="symbol"
+                        placeholder="BTC" type="text">
+                </div>
+                <button class="quote" type="submit">Quote</button>
+            </form>
+        </div>
+        <div class="tokenMenu">
+            <div class="token_symbol">
+                {{ token_name }} {{token_symbol}}
+            </div>
+            <div class="token_price">
+                {{ token_price }}
+            </div>
+            <div class="table_stats">
+                <table>
+                    <tr>
+                        <td id="l_col">Market capitalization</td>
+                        <td id="r_col">{{ token_mcap }}</td>
+                    </tr>
+                    <tr>
+                        <td id="l_col">24h volume</td>
+                        <td id="r_col">{{ token_vol24 }}</td>
+                    </tr>
+                    <tr>
+                        <td id="l_col">24h change</td>
+                        <td id="r_col">{{ token_change24 }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="right_side">
+        <div class="chartMenu">
+            <p>Price change</p>
+        </div>
+        <div class="chart_card">
+            <div class="chart_box">
+                <canvas id="myChart" width="600" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+{% endblock %}
+
+
+
+
+{% block javascript %}
+
+<script>
+gc_labels = JSON.parse({{ cg_labels | tojson }})
+gc_prices = JSON.parse({{ cg_prices | tojson }}) 
+    // setup  
+const data = {
+    labels: gc_labels, //['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    datasets: [{
+      label: 'Price',
+      data: gc_prices, //[9.33, 12, 6, 9, 12, 3, 9]
+    //   backgroundColor: [
+    //     'rgba(255, 26, 104, 0.2)',
+    //     'rgba(54, 162, 235, 0.2)',
+    //     'rgba(255, 206, 86, 0.2)',
+    //     'rgba(75, 192, 192, 0.2)',
+    //     'rgba(153, 102, 255, 0.2)',
+    //     'rgba(255, 159, 64, 0.2)',
+    //     'rgba(0, 0, 0, 0.2)'
+    //   ],
+      fill: {
+        target: {
+            value: gc_prices[0]
+        },
+        below: (context) =>{
+            console.log(context)
+            const chart = context.chart;
+            const { ctx, chartArea, data, scales } = chart;
+            if (!chartArea){
+                return null;
+            }
+            return belowGradient(ctx, chartArea, data, scales);
+          },
+        above: (context) =>{
+            console.log(context)
+            const chart = context.chart;
+            const { ctx, chartArea, data, scales } = chart;
+            if (!chartArea){
+                return null;
+            }
+            return aboveGradient(ctx, chartArea, data, scales);
+          },
+      },
+      borderColor: (context) =>{
+        console.log(context)
+        const chart = context.chart;
+        const { ctx, chartArea, data, scales } = chart;
+        if (!chartArea){
+            return null;
+        }
+        return getGradient(ctx, chartArea, data, scales)
+      },
+      tension: 0.4,
+      pointRadius: 0,
+      pointHitRadius: 10,
+      hoverPointRadius: 0
+    }]
+  };
+
+  // dottedLine plugin block
+  const dottedLine = {
+    id: 'dottedLine',
+    beforeDatasetsDraw(chart, args, pluginOptions) {
+        const { ctx, data, chartArea: {left, right, width}, scales: {y, x}  } = chart;
+        ctx.save();
+        ctx.beginPath();
+        ctx.LineWidth = 1;
+        ctx.setLineDash([1, 5]);
+        ctx.strokeStyle = 'rgab(255, 255, 255, 1)';
+        ctx.moveTo(left, y.getPixelForValue(data.datasets[0].data[0]));
+        ctx.lineTo(right, y.getPixelForValue(data.datasets[0].data[0]));
+        ctx.stroke();
+        ctx.closePath();
+        ctx.setLineDash([]);
+    }
+  }
+
+  // config 
+  const config = {
+    type: 'line',
+    data,
+    options: {
+      scales: {
+        y: {
+            ticks:{
+                color: '#FFFFFF',
+                font:{
+                    size: 10
+                }
+            },
+            beginAtZero: false
+        },
+        x: {
+            ticks: {
+                maxTicksLimit: 7,
+                color: '#FFFFFF',
+                maxRotation: 0,
+                minRotation: 0,
+                padding: 18,
+                font:{
+                    size: 10
+                }
+            }
+        }
+      },
+      plugins: {
+        legend: {
+            display: false
+        }
+      }
+    },
+    plugins: [dottedLine]
+  };
+
+  // render init block
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+
+
+  function getGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBorder = ctx.createLinearGradient(0, 0, 0, bottom);
+    const shift = y.getPixelForValue(data.datasets[0].data[0]) / bottom;
+    gradientBorder.addColorStop(0, 'rgba(2, 229, 38, 1)');
+    gradientBorder.addColorStop(shift, 'rgba(2, 229, 38, 1)');
+    gradientBorder.addColorStop(shift, 'rgba(255, 70, 159, 1)');
+    gradientBorder.addColorStop(1, 'rgba(255, 70, 159, 1)');
+    return gradientBorder;
+  };
+
+  function belowGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBackground = ctx.createLinearGradient(0, y.getPixelForValue(data.datasets[0].data[0]), 0, bottom);
+    gradientBackground.addColorStop(0, 'rgba(255, 70, 159, 0)');
+    gradientBackground.addColorStop(1, 'rgba(255, 70, 159, 0.5)');
+    return gradientBackground;
+  };
+
+  function aboveGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBackground = ctx.createLinearGradient(0, y.getPixelForValue(data.datasets[0].data[0]), 0, top);
+    gradientBackground.addColorStop(0, 'rgba(2, 229, 38, 0)');
+    gradientBackground.addColorStop(1, 'rgba(2, 229, 38, 0.5)');
+    return gradientBackground;
+  }
+</script>
+
+{% endblock %}

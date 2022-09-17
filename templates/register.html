@@ -1,40 +1,31 @@
 {% extends "layout.html" %}
 
 {% block main %}
-
-{% if alert == "missing name" %}
-    <div class="alert alert-danger" role="alert">
-        Enter username
-    </div>
-{% elif alert == "missing password" %}
-    <div class="alert alert-danger" role="alert">
-        Enter password
-    </div>
-{% elif alert == "pwds different" %}
-    <div class="alert alert-danger" role="alert">
-        Check passwords
-    </div>
-{% elif alert == "user already exists" %}
-    <div class="alert alert-danger" role="alert">
-        User already exists
-    </div>
-{% elif alert == "Smth went wrong" %}
-    <div class="alert alert-danger" role="alert">
-        Smth went wrong between python code and db 
-    </div>
+{% if alert == "user already exists" %}
+<div id="error" class="errors">User already exists</div>
+{% else %}
+<div id="error" class="errors"></div>
 {% endif %}
+            <div class="register_cont">
+                <form id="form" action="/register" method="post">
+                    <div class="mb-3">
+                        <input autocomplete="off" autofocus class="form-control
+                            mx-auto w-auto" id="username" name="username"
+                            placeholder="Discord: Account#0000" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control mx-auto w-auto" id="password"
+                            name="password" placeholder="Password"
+                            type="password">
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control mx-auto w-auto" id="confirmation"
+                            name="confirmation" placeholder="Repeat password"
+                            type="password">
+                    </div>
+                    <button class="register_login" type="submit">Register</button>
+                </form>
+            </div>
 
-<form action="/register" method="post">
-    <div class="mb-3">
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Discord: Account#0000" type="text">
-    </div>
-    <div class="mb-3">
-        <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-    </div>
-    <div class="mb-3">
-        <input class="form-control mx-auto w-auto" id="password" name="confirmation" placeholder="Repeat password" type="password">
-    </div>
-    <button type="submit">Register</button>
-</form>
 
 {% endblock %}

@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'DotGothic16', sans-serif; 
+}
+
+body{
+    background-color: black;
+}
+
+.main_container{
+    width: 100%;
+    margin: 0 auto;
+    background-color: transparent
+}
+
+/* NAV-BAR */
+.nav-bar{
+    display: flex;
+    justify-content: flex-end; /*flex-end*/
+    align-items: center;
+    width: 100%;
+    background-color: black;
+    margin: 0 auto;
+    padding: 10px 5%;
+}
+
+.logo{
+    cursor: pointer;
+    width: 100%;
+    max-width: 100px;
+    margin-right: auto;
+}
+
+.nav_links{
+    list-style: none;
+}
+
+.nav-bar li, a, button{
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+}
+
+.nav_links li {
+    display: inline-block;
+    padding: 0px 20px;
+    margin-top: 20px;
+}
+
+.nav_links li a{
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+}
+
+.nav_links li a:hover{
+    color: rgb(165, 165, 165);
+}
+
+.reg_but button {
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.reg_but button:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+
+.btn {
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.btn-check:focus+.btn-secondary, .btn-secondary:focus {
+    color: #fff;
+    background-color: #5c636a;
+    border-color: #565e64;
+    box-shadow: 0 0 0 0.1rem rgb(130 138 145 / 50%);
+}
+
+.dropdown-item {
+    background-color: rgb(255, 255, 255);
+}
+/* END OF NAV-BAR */
+
+
+
+/* REGISTER PAGE */
+.register_cont{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.register_cont .mb-3{
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.register_login {
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin: 0 auto;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register_cont button:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+
+.errors{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content:flex-end;
+    color: white;
+    padding: 10px 5%;
+    font-size: 12px;
+    -webkit-text-stroke: 0.05vw rgb(113, 2, 2)
+}
+/* END OF REGISTER PAGE */
+
+
+/* MAIN PAGE */
+.greeting{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 60px;
+    font-size: 62px;
+    color: white;
+    font-weight: bold;
+}
+
+.second_greeting{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+    margin: 0 auto;
+    font-size: 28px;
+    color: white;
+    font-weight: normal;
+}
+/* END OF MAIN PAGE */
+
+/* BUY PAGE */
+.invest{
+    width: 100%;
+    background-color: black;
+    display: flex;
+
+}
+
+.left_side{
+    margin: 30px auto;
+    padding: 10px 5%;
+    width: 49%;
+    display: inline-block;
+}
+
+/* .tokenMenu{
+    margin-top: 20px;
+    width: 100%;
+    height: 55vh;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 1px rgb(255, 255, 255);
+} */
+
+.right_side{
+    margin: 30px auto;
+    padding: 10px 5%;
+    width: 49%;
+    display: inline-block;
+}
+
+.quote_token .mb-3{
+    display: inline-block;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.quote_token .quote{
+    display: inline-block;
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.quote_token .quote:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+
+.left_side .token_symbol{
+    font-size: 28px;
+    font-weight: 900;
+    margin-top: 30px;
+    color: white;
+}
+
+.left_side .token_price{
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+    color: white;
+}
+
+.left_side .table_stats{
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 30px;
+    color: white;
+}
+
+.table_stats table{
+    width: 90%;
+}
+
+.table_stats table #l_col{
+    text-align: left;
+}
+
+.table_stats table #r_col{
+    text-align: right;
+}
+
+.table_stats table td{
+    padding: 15px 0;
+    
+}
+/* CHART - BUY PAGE */
+.chartMenu {
+    width: 100%;
+    height: 40px;
+    background: black;
+    color: white;
+}
+
+.chartMenu p {
+    padding: 10px;
+    font-size: 20px;
+}
+
+.right_side .chart_card{
+    position: relative;
+    height: calc(80vh - 20px);
+    width: 80vh;
+    display: flex;
+}
+
+.chart_box {
+    margin-top: 20px;
+    width: 100%;
+    height: 55vh;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 1px rgb(255, 255, 255);
+  }
+
+
+/* END OF CHART - BUY PAGE */
+/* END OF BUY PAGE */
+
+
+/*FOOTER*/
+footer a{
+    font-size: 12px;
+    color: white;
+}
+
+.mb-5{
+    margin-top: 100px;
+    color: white;
+}
+/*END OF FOOTER*/

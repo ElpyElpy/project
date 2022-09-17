@@ -7,22 +7,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # This function checks registration form parameters
 def complete_registration(user_name, password, confirmation, connection):
 
-    # Ensure username was submitted
-    if not user_name:
-        print(f"username: {user_name}")
-        alert = "missing name"
-        return render_template("register.html", alert=alert)
-
-    # Ensure password was submitted
-    if not password:
-        alert = "missing password"
-        return render_template("register.html", alert=alert)
-
-    # Ensure passwords are the same
-    if password != confirmation:
-        alert = "pwds different"
-        return render_template("register.html", alert=alert)
-
     # Create quiery in DB to check if user exists
     names = read_query_adr(
         connection, "SELECT * FROM Users WHERE username = %s", (user_name,))
@@ -45,8 +29,9 @@ def complete_registration(user_name, password, confirmation, connection):
 
     # Save user_id (user[0][0] - unique user id from db)
     session["user_id"] = user[0][0]
+    session["nick_name"] = user_name
 
-    return render_template("main_page.html")
+    return render_template("main_page.html", username=session["nick_name"])
 
 
 # This function checks registration form parameters
@@ -74,6 +59,7 @@ def complete_login(user_name, password, connection):
 
     # Save user_id (user[0][0] - unique user id from db)
     session["user_id"] = user[0][0]
+    session["nick_name"] = user_name
 
     return render_template("main_page.html")
 
