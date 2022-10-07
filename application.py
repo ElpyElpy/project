@@ -23,7 +23,7 @@ application = Flask(__name__)
 application.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Configure session to use filesystem (instead of signed cookies)
-application.config["SESSION_PERMANENT"] = False
+application.config["SESSION_PERMANENT"] = True
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
