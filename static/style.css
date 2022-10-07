@@ -639,7 +639,6 @@ body{
     color: white;
     font-size: 22px;
     font-weight: bold;
-    margin-left: 20px;
 }
 
 .empty_buy button:hover{
@@ -762,7 +761,6 @@ footer a{
         color: white;
         font-size: 18px;
         font-weight: bold;
-        margin-left: 20px;
     }
     
     #countdown{
@@ -974,7 +972,6 @@ footer a{
         color: white;
         font-size: 18px;
         font-weight: bold;
-        margin-left: 20px;
     }
 
     #countdown{
