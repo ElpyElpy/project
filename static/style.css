@@ -12,7 +12,7 @@
 
 body{
     /* background-color: rgb(11, 11, 69); */
-    background-image: url("/static/website_5.svg");
+    background-image: url("/static/website_7.png");
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: cover;
@@ -869,7 +869,7 @@ footer a{
 @media all and (max-width: 500px) {
     body{
         /* background-color: rgb(11, 11, 69); */
-        background-image: url("/static/website_mob.svg");
+        background-image: url("/static/website_mob_2.png");
         background-repeat: no-repeat;
         background-attachment: fixed; 
         background-size: cover;
