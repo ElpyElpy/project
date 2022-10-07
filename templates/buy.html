@@ -266,12 +266,12 @@ function drawChart() {
   }
 
   window.onload = function() {
-    if (window.innerWidth > 900) {
+    if (window.outerWidth > 900) {
+        Chart.defaults.font.size = 12;
+    } else if ((window.outerWidth <= 900) && (window.outerWidth > 500)) {
         Chart.defaults.font.size = 10;
-    } else if ((window.innerWidth <= 900) && (window.innerWidth > 500)) {
-        Chart.defaults.font.size = 6;
     } else {
-        Chart.defaults.font.size = 5;
+        Chart.defaults.font.size = 8;
     }
     drawChart()
   }

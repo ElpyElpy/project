@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 import cryptowatch as cw
 import jinja2
+import os
 
 
 def usd(value):
@@ -42,7 +43,10 @@ def cg_check_connection():
 
 
 def get_api_key():
-    return "8FSYV1P27MPU5JAASU8F"
+    if 'RDS_DB_NAME' in os.environ:
+        return os.environ["CW_TOKEN"]
+    else:
+        return "APIKEY"
 
 
 def cg_get_data(symbol):
