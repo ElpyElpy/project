@@ -2,7 +2,11 @@
 
 
 {% block main %}
-
+<!-- {% if result == "insufficient balance" %}
+<div id="error" class="errors">Insufficient balance</div>
+{% else %}
+<div id="error" class="errors">{{ alert }}</div>
+{% endif %} -->
 <div class="invest">
     <div class="left_side">
         <div class="quote_token">
@@ -18,15 +22,26 @@
         <div class="tokenMenu">
             <div class="token_symbol">
                 {{ token_name }} {{token_symbol}}
+                <button id="open" class="quote" type="submit">Buy</button>
             </div>
             <div class="token_price">
-                {{ token_price }}
+                <form id="form" action="/add_to_portfolio" method="post">
+                    <input method="post" type="hidden" name="jprice">{{ token_la_price }}</input>
+                </form>
             </div>
             <div class="table_stats">
                 <table>
                     <tr>
-                        <td id="l_col">Market capitalization</td>
-                        <td id="r_col">{{ token_mcap }}</td>
+                        <td id="l_col">Last price</td>
+                        <td id="r_col">{{ token_la_price }}</td>
+                    </tr>
+                    <tr>
+                        <td id="l_col">High 24h price</td>
+                        <td id="r_col">{{ token_hi_price }}</td>
+                    </tr>
+                    <tr>
+                        <td id="l_col">Low 24h price</td>
+                        <td id="r_col">{{ token_lo_price }}</td>
                     </tr>
                     <tr>
                         <td id="l_col">24h volume</td>
@@ -42,12 +57,52 @@
     </div>
     <div class="right_side">
         <div class="chartMenu">
-            <p>Price change</p>
+            <p>Price change, $USD</p>
         </div>
         <div class="chart_card">
             <div class="chart_box">
-                <canvas id="myChart" width="600" height="400"></canvas>
+                <canvas id="myChart"></canvas>
             </div>
+        </div>
+    </div>
+    <div class="modal-container" id="modal_container">
+        <div class="modal">
+            <div class="close_container">
+                <button class="close_button" id="close">x</button>
+            </div>
+            <h2>Choose number of tokens</h2>
+                <div class="token_symbol">
+                    {{ token_name }} {{token_symbol}}
+                </div>
+                <div class="token_price">
+                    {{ token_la_price }}
+                </div>
+                <div class="table_stats">
+                    <table>
+                        <tr>
+                            <td id="l_col">Last price</td>
+                            <td id="r_col">{{ token_la_price }}</td>
+                        </tr>
+                        <tr>
+                            <td id="l_col">24h volume</td>
+                            <td id="r_col">{{ token_vol24 }}</td>
+                        </tr>
+                        <tr>
+                            <td id="l_col">24h change</td>
+                            <td id="r_col">{{ token_change24 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            <form id="form_2" action="/add_to_portfolio" method="post">
+                <p>Number of tokens:</p>
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control
+                        mx-auto" id="tokens_to_add" name="tokens_to_add"
+                        placeholder="100">
+                </div>
+                <button id="add_button" class="register_login" type="submit">Buy</button>
+            </form>
+            <div id="error" class="errors"></div>
         </div>
     </div>
 </div>
@@ -62,123 +117,123 @@
 {% block javascript %}
 
 <script>
-gc_labels = JSON.parse({{ cg_labels | tojson }})
-gc_prices = JSON.parse({{ cg_prices | tojson }}) 
-    // setup  
-const data = {
-    labels: gc_labels, //['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    datasets: [{
-      label: 'Price',
-      data: gc_prices, //[9.33, 12, 6, 9, 12, 3, 9]
-    //   backgroundColor: [
-    //     'rgba(255, 26, 104, 0.2)',
-    //     'rgba(54, 162, 235, 0.2)',
-    //     'rgba(255, 206, 86, 0.2)',
-    //     'rgba(75, 192, 192, 0.2)',
-    //     'rgba(153, 102, 255, 0.2)',
-    //     'rgba(255, 159, 64, 0.2)',
-    //     'rgba(0, 0, 0, 0.2)'
-    //   ],
-      fill: {
-        target: {
-            value: gc_prices[0]
-        },
-        below: (context) =>{
-            console.log(context)
-            const chart = context.chart;
-            const { ctx, chartArea, data, scales } = chart;
-            if (!chartArea){
-                return null;
-            }
-            return belowGradient(ctx, chartArea, data, scales);
-          },
-        above: (context) =>{
-            console.log(context)
-            const chart = context.chart;
-            const { ctx, chartArea, data, scales } = chart;
-            if (!chartArea){
-                return null;
-            }
-            return aboveGradient(ctx, chartArea, data, scales);
-          },
-      },
-      borderColor: (context) =>{
-        console.log(context)
-        const chart = context.chart;
-        const { ctx, chartArea, data, scales } = chart;
-        if (!chartArea){
-            return null;
-        }
-        return getGradient(ctx, chartArea, data, scales)
-      },
-      tension: 0.4,
-      pointRadius: 0,
-      pointHitRadius: 10,
-      hoverPointRadius: 0
-    }]
-  };
-
-  // dottedLine plugin block
-  const dottedLine = {
-    id: 'dottedLine',
-    beforeDatasetsDraw(chart, args, pluginOptions) {
-        const { ctx, data, chartArea: {left, right, width}, scales: {y, x}  } = chart;
-        ctx.save();
-        ctx.beginPath();
-        ctx.LineWidth = 1;
-        ctx.setLineDash([1, 5]);
-        ctx.strokeStyle = 'rgab(255, 255, 255, 1)';
-        ctx.moveTo(left, y.getPixelForValue(data.datasets[0].data[0]));
-        ctx.lineTo(right, y.getPixelForValue(data.datasets[0].data[0]));
-        ctx.stroke();
-        ctx.closePath();
-        ctx.setLineDash([]);
+function drawChart() {
+    gc_labels = JSON.parse({{ cg_labels | tojson }})
+    for (let key in gc_labels){
+    var dt = moment.utc(gc_labels[key]).toDate();
+    gc_labels[key] = moment(dt).local().format("MM-DD");
     }
-  }
-
-  // config 
-  const config = {
-    type: 'line',
-    data,
-    options: {
-      scales: {
-        y: {
-            ticks:{
-                color: '#FFFFFF',
-                font:{
-                    size: 10
-                }
+    gc_prices = JSON.parse({{ cg_prices | tojson }}) 
+        // setup  
+    const data = {
+        labels: gc_labels, //['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] gc_labels
+        datasets: [{
+        label: 'Price',
+        data: gc_prices, //[9.33, 12, 6, 9, 12, 3, 9] gc_prices
+        //   backgroundColor: [
+        //     'rgba(255, 26, 104, 0.2)',
+        //     'rgba(54, 162, 235, 0.2)',
+        //     'rgba(255, 206, 86, 0.2)',
+        //     'rgba(75, 192, 192, 0.2)',
+        //     'rgba(153, 102, 255, 0.2)',
+        //     'rgba(255, 159, 64, 0.2)',
+        //     'rgba(0, 0, 0, 0.2)'
+        //   ],
+        fill: {
+            target: {
+                value: gc_prices[0] //gc_prices[0]
             },
-            beginAtZero: false
+            below: (context) =>{
+                console.log(context)
+                const chart = context.chart;
+                const { ctx, chartArea, data, scales } = chart;
+                if (!chartArea){
+                    return null;
+                }
+                return belowGradient(ctx, chartArea, data, scales);
+            },
+            above: (context) =>{
+                console.log(context)
+                const chart = context.chart;
+                const { ctx, chartArea, data, scales } = chart;
+                if (!chartArea){
+                    return null;
+                }
+                return aboveGradient(ctx, chartArea, data, scales);
+            },
         },
-        x: {
-            ticks: {
-                maxTicksLimit: 7,
-                color: '#FFFFFF',
-                maxRotation: 0,
-                minRotation: 0,
-                padding: 18,
-                font:{
-                    size: 10
+        borderColor: (context) =>{
+            console.log(context)
+            const chart = context.chart;
+            const { ctx, chartArea, data, scales } = chart;
+            if (!chartArea){
+                return null;
+            }
+            return getGradient(ctx, chartArea, data, scales)
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHitRadius: 10,
+        hoverPointRadius: 0
+        }]
+    };
+
+    // dottedLine plugin block
+    const dottedLine = {
+        id: 'dottedLine',
+        beforeDatasetsDraw(chart, args, pluginOptions) {
+            const { ctx, data, chartArea: {left, right, width}, scales: {y, x}  } = chart;
+            ctx.save();
+            ctx.beginPath();
+            ctx.LineWidth = 1;
+            ctx.setLineDash([1, 5]);
+            ctx.strokeStyle = 'rgab(255, 255, 255, 1)';
+            ctx.moveTo(left, y.getPixelForValue(data.datasets[0].data[0]));
+            ctx.lineTo(right, y.getPixelForValue(data.datasets[0].data[0]));
+            ctx.stroke();
+            ctx.closePath();
+            ctx.setLineDash([]);
+        }
+    }
+
+    // config 
+    const config = {
+        type: 'line',
+        data,
+        options: {
+        maintainAspectRatio: false,    
+        scales: {
+            y: {
+                ticks:{
+                    color: '#FFFFFF',
+                },
+                beginAtZero: false
+            },
+            x: {
+                ticks: {
+                    maxTicksLimit: 7,
+                    color: '#FFFFFF',
+                    maxRotation: 0,
+                    minRotation: 0,
+                    padding: 18,
                 }
             }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
         }
-      },
-      plugins: {
-        legend: {
-            display: false
-        }
-      }
-    },
-    plugins: [dottedLine]
-  };
+        },
+        plugins: [dottedLine]
+    };
 
-  // render init block
-  const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-  );
-
+    // render init block
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+}
 
   function getGradient(ctx, chartArea, data, scales) {
     const {left, right, top, bottom, width, height} = chartArea;
@@ -209,6 +264,18 @@ const data = {
     gradientBackground.addColorStop(1, 'rgba(2, 229, 38, 0.5)');
     return gradientBackground;
   }
+
+  window.onload = function() {
+    if (window.innerWidth > 900) {
+        Chart.defaults.font.size = 10;
+    } else if ((window.innerWidth <= 900) && (window.innerWidth > 500)) {
+        Chart.defaults.font.size = 6;
+    } else {
+        Chart.defaults.font.size = 5;
+    }
+    drawChart()
+  }
+
 </script>
 
 {% endblock %}

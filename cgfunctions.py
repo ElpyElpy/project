@@ -7,6 +7,8 @@ import pandas as pd
 import logging
 import time
 from datetime import datetime
+import cryptowatch as cw
+import jinja2
 
 
 def usd(value):
@@ -14,9 +16,23 @@ def usd(value):
     return f"${value:,.2f}"
 
 
+jinja2.filters.FILTERS['usd'] = usd
+
+
+def qnt(value):
+    return f"{value:,.2f}"
+
+
 def percent(value):
     """Format value as percent."""
+    if value > 0:
+        return f"+{value*100:,.2f}%"
+    elif value < 0:
+        return f"{value*100:,.2f}%"
     return f"{value:,.2f}%"
+
+
+jinja2.filters.FILTERS['percent'] = percent
 
 
 def cg_check_connection():
@@ -25,71 +41,86 @@ def cg_check_connection():
         logging.critical('CONNECTED WITH COINGECKO')
 
 
+def get_api_key():
+    return "8FSYV1P27MPU5JAASU8F"
+
+
 def cg_get_data(symbol):
-    cg = CoinGeckoAPI()
     token_data = {}
     symbol = symbol.lower()
-    # receive all tokens data and get token price by symbol
-    tokens = cg.get_coins_list()
-    logging.critical('list of tokens was loaded')
-    for token in tokens:
-        if token["symbol"] == symbol:
-            logging.critical('token was found by symbol')
-            price = cg.get_price(token["id"], "usd", include_market_cap=True,
-                                 include_24hr_vol=True, include_24hr_change=True)
-            token_data["price"] = usd(price[token["id"]]["usd"])
-            token_data["mcap"] = usd(price[token["id"]]["usd_market_cap"])
-            token_data["volume24"] = usd(price[token["id"]]["usd_24h_vol"])
-            token_data["change24"] = percent(
-                price[token["id"]]["usd_24h_change"])
-            token_data["name"] = token["name"]
-            token_data["symbol"] = token["symbol"].upper()
-            print(price)
-            return token_data
+    cw.api_key = get_api_key()
+    curr = "usd"
+    exchange = "coinbase-pro:"
+    pair = exchange + symbol + curr
+    summary = cw.markets.get(pair)
+    token = cw.assets.get(symbol)
+
+    # get main symbol statistics
+    token_data["name"] = token.asset.name
+    token_data["last_price"] = usd(summary.market.price.last)
+    token_data["lowest_price"] = usd(summary.market.price.low)
+    token_data["highest_price"] = usd(summary.market.price.high)
+    token_data["change24h"] = percent(summary.market.price.change)
+    token_data["volume"] = usd(summary.market.volume_quote)
+    token_data["symbol"] = symbol.upper()
+    token_data["price_db"] = summary.market.price.last
+
+    return token_data
 
 
-def cg_hist_price(symbol):
-    cg = CoinGeckoAPI()
-
+def cg_hist_price(symbol, time_delta=None):
     symbol = symbol.lower()
-    # receive all tokens data and get token price by symbol
-    tokens = cg.get_coins_list()
-    logging.critical('list of tokens was loaded')
-    for token in tokens:
-        if token["symbol"] == symbol:
-            logging.critical('token was found by symbol')
+    # load api
+    cw.api_key = get_api_key()
+    curr = "usd"
+    exchange = "coinbase-pro:"
+    pair = exchange + symbol + curr
+    candles = cw.markets.get(pair, ohlc=True)
+    if time_delta == None:
+        fr = 1000 - 24 * 7
+        to = 1000
+        candles = candles.of_1h[fr:to]
+    elif time_delta.total_seconds() < 3600:
+        fr = 1000 - int(round(time_delta.total_seconds()/60, 0)) - 2
+        to = 1000
+        candles = candles.of_1m[fr:to]
+    elif time_delta.total_seconds() < 12 * 3600:
+        fr = 1000 - int(round(time_delta.total_seconds()/180, 0)) - 2
+        to = 1000
+        candles = candles.of_3m[fr:to]
+    elif time_delta.total_seconds() < 24 * 3600:
+        fr = 1000 - int(round(time_delta.total_seconds()/300, 0)) - 2
+        to = 1000
+        candles = candles.of_5m[fr:to]
+    else:
+        fr = 1000 - int(round(time_delta.total_seconds()/3600, 0)) - 2
+        to = 1000
+        candles = candles.of_1h[fr:to]
+    # get historical data
+    cg_prices = []
+    cg_labels = []
+    for candle in candles:
+        cg_prices.append(candle[1])
+        cg_labels.append(datetime.utcfromtimestamp(
+            int(candle[0])).strftime('%Y-%m-%d %H:%M:%S'))
+    return cg_prices, cg_labels
 
-            # Calculate endPeriod in UNIX (now)
-            endPeriod = int(time.time())
 
-            # Calculate start period in UNIX (end period - 7 days time delta)
-            time_delta = 6 * 24 * 60 * 60
-            startPeriod = endPeriod - time_delta
-            # receive historical data from CoinGecko
-            data = cg.get_coin_market_chart_range_by_id(
-                token["id"], "usd", startPeriod, endPeriod)
-
-            # save only prices
-            data = data["prices"]
-
-            # save in json data, which will be placed into JS code (via jinja code)
-            cg_prices = []
-            cg_labels = []
-            for el in data:
-                cg_prices.append(el[1])
-                cg_labels.append(datetime.utcfromtimestamp(
-                    int(el[0])/1000).strftime('%Y-%m-%d'))
-
-            # format unis time-stamps into dd/mm/yy format
-
-            return cg_prices, cg_labels
-
-
-# cg_prices, cg_labels = cg_hist_price("BTC")
-# print(cg_prices)
-# print("########")
-# print(cg_labels)
-
-# cg_prices, cg_labels = cg_hist_price("BTC")
-# print(cg_prices)
-# print(cg_labels)
+def cg_get_portfolio_history(connection, balance, cash, user_id):
+    # get prices for each crypto assets inside of users portfolio
+    temp = []
+    # get time-stamp for the earliest tnx
+    time_stamps = read_query_adr(
+        connection, "SELECT * FROM transactions WHERE user_id = %s", (user_id,))
+    time_delta = datetime.now() - time_stamps[0][4]
+    for asset in balance:
+        cg_prices, cg_labels = cg_hist_price(asset[0], time_delta)
+        cg_prices = [element * float(asset[1].replace(",", ""))
+                     for element in cg_prices]
+        if len(temp) == 0:
+            temp = cg_prices
+        else:
+            temp = [sum(x) for x in zip(temp, cg_prices)]
+    cg_prices = [element + float(cash.replace(",", "").replace("$", ""))
+                 for element in temp]
+    return cg_prices, cg_labels

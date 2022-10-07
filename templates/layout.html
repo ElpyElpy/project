@@ -24,14 +24,18 @@
     </head>
 
     <body>
+        <div id="preloader">
+
+        </div>
         <header>
-            <div class="nav-bar">
+            <div class="nav-bar" id="nav_header">
                 <img class="logo" src="/static/ASPIS_two_col_logo.svg" alt="ASPIS">
                 {% if session["user_id"] %}
                 <nav>
                     <ul class="nav_links">
-                        <li><a href="/buy">Create portfolio</a></li>
-                        <li><a href="#">Projects</a></li>
+                        <li><a id ="top_menu" href="/">Main</a></li>
+                        <li><a id ="top_menu" href="/buy">Add tokens</a></li>
+                        <li><a id ="top_menu" href="/portfolio">Portfolio</a></li>
                     </ul>
                 </nav>
                 <div class="dropdown">
@@ -40,7 +44,9 @@
                         {{ session["nick_name"]}}
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/">Main</a></li>
+                        <li><a class="dropdown-item" href="/buy">Add tokens</a></li>
+                        <li><a class="dropdown-item" href="/portfolio">Portfolio</a></li>
                         <li><a class="dropdown-item" href="/logout">Log out</a></li>
                     </ul>
                 </div>
@@ -55,11 +61,22 @@
             {% block main %}{% endblock %}
         </main>
         <footer class="mb-5 small text-center text-muted">
-            Data provided by <a href="https://www.coingecko.com">CoinGecko</a>
+            Data provided by <a href="https://www.cryptowat.ch">CryptoWatch</a>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-        <script type="text/javascript" src="utility.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!-- <script type="text/javascript" src="script3.js"></script> -->
+    
+    
+    <script>
+        setInterval(function(){
+            var preloader = document.getElementById("preloader");
+            preloader.style.display ="none"
+        },800);
+    </script>
+    
+    
+    
     </body>
     {% block javascript %}{% endblock %}
 </html>

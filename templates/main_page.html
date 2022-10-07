@@ -4,11 +4,100 @@
 
         <main class="main_container">
             <div class="greeting">
-                Welcome to the PORTFOLIO GAMES
+                PORTFOLIO GAMES
             </div>
+            {% if balance == 1 %}
+            <div class="empty_portfolio">
+                <div class="greeting">
+                    <h2>You don't have a portfolio</h2>
+                    <a class="empty_buy" href="/buy"><button>Create</button></a>   
+                </div>
+            </div>
+            {% else %}
             <div class="second_greeting">
-                Login with discord account, create portfolio and win competition
+                create portfolio and win   
             </div>
+            <div class="for_button">
+                <a class="empty_buy" href="/buy"><button>Create</button></a>    
+            </div>
+            <div class="comp_starts">
+                next competition starts in:
+            </div>
+            <table id="countdown">
+                <tr id="countdown-timer">
+                    <td><span id="days">x</span></td>
+                    <td><span id="hours">x</span></td>
+                    <td><span id="minutes">x</span></td>
+                    <td><span id="seconds">x</span></td>
+                </tr>
+                <tr id="countdown-labels">
+                    <td><span>Days</span></td>
+                    <td><span>Hours</span></td>
+                    <td><span>Minutes</span></td>
+                    <td><span>Seconds</span></td>
+                </tr>
+            </table>
+            
+            {% endif %}
         </main>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    const storeOpening = new Date('oct 10, 2022 00:00:00');
+    
+    setCountdown(storeOpening) // set countdown only once
+    
+    // set every second
+    setInterval(function() {
+        setCountdown(storeOpening)
+    },1000)
+    
+    function setCountdown(countingDownTime) {
+        
+        let now = new Date()
+
+        let timeRemaining = countingDownTime - now; // in milliseconds 
+
+        // convert into regular units
+
+        // seconds
+        let seconds = Math.floor(timeRemaining / 1000);
+        // minutes
+        let minutes = Math.floor(timeRemaining / (1000*60));
+        // hours
+        let hours = Math.floor(timeRemaining / (1000*60*60));
+        // days
+        let days = Math.floor(timeRemaining / (1000*60*60*24));
+        
+        console.log(days, hours, minutes, seconds); // absolute time left in each unit
+
+        // substract bigger units from smaller
+        let daysToDisplay = days;
+
+        // substract 24h per each day
+        let hoursToDisplay = hours - (days * 24);
+        
+        // same for minutes and seconds
+        let minutesToDisplay = minutes - (hours * 60);
+
+        let secondsToDisplay = seconds - (minutes * 60);
+ 
+        console.log(daysToDisplay, hoursToDisplay, minutesToDisplay, secondsToDisplay);
+
+        // countdown in displayable format
+
+        // print to DOM
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        daysEl.textContent = daysToDisplay;
+        hoursEl.textContent = hoursToDisplay;
+        minutesEl.textContent = minutesToDisplay;
+        secondsEl.textContent = secondsToDisplay;
+    }
+</script>
 
 {% endblock %}

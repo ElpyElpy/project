@@ -1,31 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap'); */
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'DotGothic16', sans-serif; 
+    font-family: 'DotGothic16', sans-serif;
 }
 
 body{
-    background-color: black;
+    /* background-color: rgb(11, 11, 69); */
+    background-image: url("/static/website_5.svg");
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;
+}
+
+#preloader{
+    background: rgba(0, 0, 0, 1) url('/static/preloader.gif') no-repeat center center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
 }
 
 .main_container{
     width: 100%;
     margin: 0 auto;
-    background-color: transparent
+    background-color: transparent;
 }
 
+
+/* background-color: rgb(11, 11, 69); */
 /* NAV-BAR */
 .nav-bar{
     display: flex;
     justify-content: flex-end; /*flex-end*/
     align-items: center;
     width: 100%;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
     margin: 0 auto;
     padding: 10px 5%;
+    box-shadow: 0px 0px 15px 15px rgba(0, 0, 0, 0.4);
+
 }
+
 
 .logo{
     cursor: pointer;
@@ -109,7 +130,8 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 60px;
+    color: white;
 }
 
 .register_cont .mb-3{
@@ -117,7 +139,7 @@ body{
     width: 100%;
     margin-top: 5px;
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .register_login {
@@ -150,7 +172,7 @@ body{
     color: white;
     padding: 10px 5%;
     font-size: 12px;
-    -webkit-text-stroke: 0.05vw rgb(113, 2, 2)
+    color: darkred;
 }
 /* END OF REGISTER PAGE */
 
@@ -162,17 +184,56 @@ body{
     justify-content: center;
     margin: 0 auto;
     margin-top: 60px;
-    font-size: 62px;
+    font-size: 52px;
     color: white;
     font-weight: bold;
+    font-family: 'Bungee Shade', cursive; 
+}
+
+.for_button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+#countdown{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 1rem;
+    color: white;
+    font-weight: bold;
+}
+
+#countdown-timer span{
+    display: inline-block;
+    padding: 1rem;
+    width: 200px;
+    margin: 0.5rem;
+    border: 2px yellowgreen dotted;
+    border-radius: 10px;
+    box-shadow: 0px 0px 36px 15px rgba(204, 255, 0, 0.4);
 }
 
 .second_greeting{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 60px;
-    margin: 0 auto;
+    margin-top: 1rem;
+    font-size: 28px;
+    color: white;
+    font-weight: normal;
+}
+
+.comp_starts{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6rem;
     font-size: 28px;
     color: white;
     font-weight: normal;
@@ -182,38 +243,44 @@ body{
 /* BUY PAGE */
 .invest{
     width: 100%;
-    background-color: black;
+    background-color: transparent;
     display: flex;
-
 }
 
 .left_side{
     margin: 30px auto;
     padding: 10px 5%;
     width: 49%;
+    height: 500px;
     display: inline-block;
 }
-
-/* .tokenMenu{
-    margin-top: 20px;
-    width: 100%;
-    height: 55vh;
-    padding: 20px;
-    border-radius: 10px;
-    border: solid 1px rgb(255, 255, 255);
-} */
 
 .right_side{
     margin: 30px auto;
     padding: 10px 5%;
     width: 49%;
     display: inline-block;
+    height: 500px;
 }
+
+.tokenMenu{
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    height: 380px;
+}
+
+
+
+.quote_token {
+    border-bottom: 1px solid white;
+}
+
+
 
 .quote_token .mb-3{
     display: inline-block;
     margin-top: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .quote_token .quote{
@@ -235,17 +302,42 @@ body{
 }
 
 .left_side .token_symbol{
+    display:flex;
+    justify-content:space-between;
     font-size: 28px;
     font-weight: 900;
     margin-top: 30px;
     color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
 }
+
+.token_symbol .quote{
+    padding: 9px 25px;
+    background-color: rgb(255, 255, 255);
+    font-size: 16px;
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: black;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.token_symbol .quote:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+
 
 .left_side .token_price{
     font-size: 16px;
     font-weight: 600;
     margin-top: 5px;
     color: white;
+    padding-left: 15px;
 }
 
 .left_side .table_stats{
@@ -253,10 +345,12 @@ body{
     font-weight: 600;
     margin-top: 30px;
     color: white;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .table_stats table{
-    width: 90%;
+    width: 100%;
 }
 
 .table_stats table #l_col{
@@ -268,41 +362,291 @@ body{
 }
 
 .table_stats table td{
-    padding: 15px 0;
-    
+    padding: 13px 0;   
 }
+/* POPUP */
+.modal-container{
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: opacity 0.3s ease;
+}
+
+.modal-container.show{
+    pointer-events: auto;
+    opacity: 1;
+}
+
+.modal{
+    display: flex;
+    flex-direction: column;
+    position:relative;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 450px;
+    max-width: 100%;
+    height: 65%;
+    padding: 10px 30px;
+}
+
+.modal .close_container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal .close_container #close{
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    background-color: rgb(255, 255, 255);
+    font-size: 12px;
+    border-color: white;
+    border: 0ch;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+    transition: all 0.3s ease 0s;
+}
+
+.modal .close_container #close:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
+.modal .token_symbol{
+    display:flex;
+    justify-content:space-between;
+    font-size: 28px;
+    font-weight: 900;
+    margin-top: 20px;
+    color: rgb(72, 72, 72);
+}
+
+.modal .table_stats{
+    margin-top: 20px;
+}
+
+.modal #form_2{
+    margin-top: 20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:left;
+    width: 100%;
+}
+
+.modal #add_button{
+    margin: auto;
+    width: 100%;
+    transition: all 0.3s ease 0s;
+    background-color: rgb(0, 219, 55);
+}
+
+.modal #add_button:hover{
+    background-color: rgb(23, 23, 23);
+    color: white;
+}
+
+/* END OF POPUP */
 /* CHART - BUY PAGE */
 .chartMenu {
     width: 100%;
+    position: relative;
     height: 40px;
-    background: black;
+    background: transparent;
     color: white;
 }
 
 .chartMenu p {
     padding: 10px;
-    font-size: 20px;
+    font-size: 28px;
+    border-bottom: 1px solid white;
 }
 
 .right_side .chart_card{
     position: relative;
-    height: calc(80vh - 20px);
-    width: 80vh;
+    margin-top: 30px;
+    width: 100%;
     display: flex;
+    
 }
 
 .chart_box {
     margin-top: 20px;
     width: 100%;
-    height: 55vh;
     padding: 20px;
     border-radius: 10px;
-    border: solid 1px rgb(255, 255, 255);
+    /* border: solid 1px rgb(255, 255, 255); */
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 380px;
   }
 
 
 /* END OF CHART - BUY PAGE */
 /* END OF BUY PAGE */
+
+/* PORTFOLIO */
+.portfolio{
+    width: 100%;
+    margin: 30px auto;
+    padding: 10px 5%;
+    color: white;
+}
+
+.portfolio_tb{
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 15px 15px 15px 15px;
+}
+
+.portfolio .table_portfolio{
+    color: white;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.portfolio .table_portfolio th{
+    border-bottom: 1pt solid rgb(177, 177, 177);
+    padding-bottom: 10px;
+    
+}
+.portfolio .table_portfolio td{
+    padding: 15px 0;    
+    font-weight: 100;   
+}
+
+.portfolio .table_portfolio tbody{
+    border-bottom: 1pt solid rgb(177, 177, 177);
+    padding-bottom: 10px;
+}
+
+.ch_box{    
+    width: 100%;
+    margin: 30px auto;
+    padding: 10px 5%;
+    color: white;
+}
+
+.assets{
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    color: rgb(177, 177, 177);
+    border-bottom: solid 1px white;
+}
+
+.aum_change{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.aum_change .aum{
+    width: 48%;
+}
+
+.aum_change h5{
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px yellowgreen dotted;
+    border-radius: 10px;
+    box-shadow: 0px 0px 12px 5px rgba(204, 255, 0, 0.4);
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+.aum_change .change{
+    width: 48%;
+}
+
+.assets h4{
+    display: inline-block;
+}
+
+.neg_change{
+    color: rgb(216, 144, 144);
+
+}
+.pos_change{
+    color: rgb(195, 220, 156);
+    
+}
+
+.assets_1{
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    color: rgb(177, 177, 177);
+    margin: 30px auto;
+    border-bottom: solid 1px white;
+}
+
+.ch_box .chart_card{
+    position: relative;
+    height: 380px;
+    width: 100%;
+    display: flex;
+}
+
+.ch_box .ch_box {
+    margin-top: 20px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+
+
+/* END OF PORTFOLIO */
+
+/* IN CASE THERE ARE NO PORTFOLIO */
+.empty_portfolio{
+    
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 60px;
+    font-size: 62px;
+    color: white;
+    font-weight: bold;
+}
+
+.empty_portfolio .greeting{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.empty_buy button {
+    
+    padding: 15px 100px;
+    background-color: black;
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.empty_buy button:hover{
+    background-color: white;
+    color: black;
+}
+/* END OF IN CASE THERE ARE NO PORTFOLIO */
 
 
 /*FOOTER*/
@@ -316,3 +660,471 @@ footer a{
     color: white;
 }
 /*END OF FOOTER*/
+
+
+
+/* FOR SMALLER SCREENS */
+@media all and (max-width: 900px) {
+    /* NAV-BAR */
+    .reg_but button {
+        padding: 4px 12px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease 0s;
+        color: black;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .btn {
+        padding: 4px 12px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease 0s;
+        color: black;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .dropdown-item {
+        background-color: rgb(255, 255, 255);
+        font-size: 12px;
+    }
+
+    .nav-bar li, a, button{
+        font-weight: 500;
+        font-size: 12px;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav_links li {
+        display: inline-block;
+        padding: 0px 5px;
+        margin-top: 20px;
+    }
+
+    .logo{
+        cursor: pointer;
+        width: 100%;
+        max-width: 50px;
+        margin-right: auto;
+    }
+    /* END OF NAV-BAR */
+    
+    /* MAIN PAGE */
+    .greeting{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        margin-top: 60px;
+        font-size: 32px;
+        color: white;
+        font-weight: bold;
+        font-family: 'Bungee Shade', cursive; 
+    }
+    
+    .comp_starts{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 6rem;
+        font-size: 22px;
+        color: white;
+        font-weight: normal;
+    }
+
+    .second_greeting{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+        font-size: 22px;
+        color: white;
+        font-weight: normal;
+    }
+
+    .empty_buy button {
+    
+        padding: 8px 50px;
+        background-color: black;
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+    
+    #countdown{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        text-align: center;
+        margin: 1rem;
+        color: white;
+        font-weight: bold;
+    }
+
+    #countdown-timer span{
+        display: inline-block;
+        padding: 1rem;
+        width: 100px;
+        margin: 0.5rem;
+        border: 2px yellowgreen dotted;
+        border-radius: 10px;
+        box-shadow: 0px 0px 36px 15px rgba(204, 255, 0, 0.4);
+    }
+    /* END OF MAIN PAGE */
+
+    /* BUY PAGE */
+    .quote_token .quote{
+        display: inline-block;
+        padding: 9px 18px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .left_side .token_symbol{
+        display:flex;
+        justify-content:space-between;
+        font-size: 22px;
+        font-weight: 900;
+        margin-top: 30px;
+        color: white;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 15px;
+    }
+    
+    .token_symbol .quote{
+        padding: 9px 25px;
+        background-color: rgb(255, 255, 255);
+        font-size: 14px;
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        color: black;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .left_side .token_price{
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 2px;
+        color: white;
+        padding-left: 15px;
+    }
+
+    .left_side .table_stats{
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 30px;
+        color: white;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .chartMenu p {
+        padding: 10px;
+        font-size: 22px;
+        border-bottom: 1px solid white;
+    }
+
+    .modal{
+        display: flex;
+        flex-direction: column;
+        position:relative;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        width: 450px;
+        max-width: 100%;
+        height: 525px;
+        padding: 10px 30px;
+    }
+    /* END OF BUY PAGE */
+}
+
+
+@media all and (max-width: 500px) {
+    body{
+        /* background-color: rgb(11, 11, 69); */
+        background-image: url("/static/website_mob.svg");
+        background-repeat: no-repeat;
+        background-attachment: fixed; 
+        background-size: cover;
+    }
+    
+    /* NAV-BAR */
+    .reg_but button {
+        padding: 4px 12px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 5px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        color: black;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .btn {
+        padding: 4px 12px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 5px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        color: black;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .dropdown-item {
+        background-color: rgb(255, 255, 255);
+        font-size: 12px;
+    }
+
+    .nav_links #top_menu{
+        display: none;
+        font-weight: 500;
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav_links li {
+        display: none;
+        display: inline-block;
+        padding: 0px 20px;
+        margin-top: 20px;
+    }
+
+    .logo{
+        cursor: pointer;
+        width: 100%;
+        max-width: 50px;
+        margin-right: auto;
+    }
+    /* END OF NAV-BAR */
+    
+    /* MAIN PAGE */
+    .greeting{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        margin-top: 60px;
+        font-size: 24px;
+        color: white;
+        font-weight: bold;
+        font-family: 'Bungee Shade', cursive; 
+    }
+
+    .comp_starts{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 6rem;
+        font-size: 18px;
+        color: white;
+        font-weight: normal;
+    }
+    
+    .second_greeting{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+        font-size: 18px;
+        color: white;
+        font-weight: normal;
+    }
+
+    .empty_buy button {
+    
+        padding: 5px 35px;
+        background-color: black;
+        border: solid;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    #countdown{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        text-align: center;
+        margin: 1rem;
+        color: white;
+        font-weight: bold;
+    }
+
+    #countdown-timer span{
+        display: inline-block;
+        padding: 1rem;
+        width: 70px;
+        margin: 0.5rem;
+        border: 2px yellowgreen dotted;
+        border-radius: 10px;
+        box-shadow: 0px 0px 36px 15px rgba(204, 255, 0, 0.4);
+    }
+    /* END OF MAIN PAGE */
+
+    /* BUY PAGE */
+    .invest{
+        width: 100%;
+        background-color: transparent;
+        display: block;
+    }
+    
+    .left_side{
+        margin: 10px auto;
+        padding: 10px 5%;
+        width: 100%;
+        height: 500px;
+        /* display: block; */
+    }
+    
+    .right_side{
+        margin: 0px auto;
+        padding: 0px 5%;
+        width: 100%;
+        height: 500px;
+        /* display: block; */
+    }
+
+    .quote_token .quote{
+        display: inline-block;
+        padding: 9px 41px;
+        background-color: rgb(255, 255, 255);
+        border: solid;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+        margin-top: 0px;
+    }
+
+    .modal{
+        display: flex;
+        flex-direction: column;
+        position:relative;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        width: 325px;
+        max-width: 100%;
+        height: 475px;
+        padding: 10px 30px;
+    }
+
+    .modal h2{
+        font-size: 22px;
+    }
+
+    .modal .token_symbol{
+        display:flex;
+        justify-content:space-between;
+        font-size: 18px;
+        font-weight: 900;
+        margin-top: 20px;
+        color: rgb(72, 72, 72);
+    }
+
+    .modal .token_price{
+        display:flex;
+        justify-content:space-between;
+        font-size: 14px;
+        font-weight: 900;
+        color: rgb(72, 72, 72);
+    }
+    
+    .modal .table_stats{
+        margin-top: 20px;
+        font-size: 12px;
+    }
+    
+    .modal #form_2{
+        margin-top: 20px;
+        font-size: 14px;
+        display:flex;
+        flex-direction:column;
+        justify-content:left;
+        width: 100%;
+    }
+    
+    .modal #add_button{
+        margin: auto;
+        width: 100%;
+        transition: all 0.3s ease 0s;
+        background-color: rgb(0, 219, 55);
+    }
+
+    .aum_change h5{
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 2px yellowgreen dotted;
+        border-radius: 10px;
+        box-shadow: 0px 0px 12px 5px rgba(204, 255, 0, 0.4);
+        border-radius: 10px;
+        font-size: 14px;
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .portfolio_tb{
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    .portfolio .table_portfolio{
+        color: white;
+        width: 100%;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .assets_1{
+        width: 100%;
+        display: flex;
+        color: rgb(177, 177, 177);
+        margin: 10px auto;
+        border-bottom: solid 1px white;
+    }
+
+    /* END OF BUY PAGE */
+}
+
+/* END OF SMALLER SCREENS */

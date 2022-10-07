@@ -4,7 +4,7 @@
 {% if alert == "user already exists" %}
 <div id="error" class="errors">User already exists</div>
 {% else %}
-<div id="error" class="errors"></div>
+<div id="error" class="errors">{{ alert }}</div>
 {% endif %}
             <div class="register_cont">
                 <form id="form" action="/login" method="post">

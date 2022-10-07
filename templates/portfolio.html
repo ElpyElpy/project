@@ -1,0 +1,259 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="ch_box">
+    <div class="assets">
+        <h4>Assets under management, $USD</h4>
+    </div>
+    <div class="chart_card">
+        <div class="ch_box">
+            <canvas id="myCh" width="1400" height="350"></canvas>
+        </div>
+    </div>
+    <div class="aum_change">
+      <div class="aum">
+          <h5>AUM: {{ total }}</h5>
+      </div>
+      <div class="change">
+        {% if total_change <= 0 %}
+        <h5 class="neg_change">Change: {{total_change | percent}}</h5>
+        {% else %}
+        <h5 class="pos_change">Change: {{total_change | percent}}</h5>
+        {% endif %}
+      </div>
+    </div>
+</div>
+
+
+<div class="portfolio">
+  <div class="assets_1">
+    <h4>Portfolio distribution</h4>
+  </div>
+  <div class="portfolio_tb">
+      <table class="table_portfolio">
+              <thead>
+                  <th class="text-start">Symbol</th>
+                  <th class="text-start text-end">Quantity</th>
+                  <th class="text-start text-end">Current price</th>
+                  <th class="text-start text-end">TOTAL</th>
+              </thead>
+              <tbody >
+                  {% for asset in balance %}
+                  <tr>
+                      <td class="border-0 text-start">{{ asset[0] }}</td>
+                      <td class="border-0 text-end">{{ asset[1] }}</td>
+                      <td class="border-0 text-end">{{ asset[2] }}</td>
+                      <td class="border-0 text-end">{{ asset[3] }}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <td class="border-0 fw-bold text-end" colspan="3">Cash</td>
+                      <td class="border-0 text-end">{{ cash }}</td>
+                  </tr>
+                  <tr>
+                      <td class="border-0 fw-bold text-end" colspan="3">TOTAL</td>
+                      <td class="border-0 text-end">{{ total }}</td>
+                  </tr>
+              </tfoot>
+          </table>
+  </div>
+
+
+
+  <div class="assets_1">
+    <h4>Transaction history</h4>
+  </div>
+  <div class="portfolio_tb">
+    <table class="table_portfolio">
+            <thead>
+                <th class="text-start">Symbol</th>
+                <th class="text-start text-end">Quantity</th>
+                <th class="text-start text-end">Buy price</th>
+                <th class="text-start text-end">Time</th>
+            </thead>
+            <tbody >
+                {% for tnx in transactions | reverse %}
+                <tr>
+                    <td class="border-0 text-start">{{ tnx[0] }}</td>
+                    <td class="border-0 text-end">{{ tnx[1] }}</td>
+                    <td class="border-0 text-end">{{ tnx[2] | usd }}</td>
+                    <td class="border-0 text-end">{{ tnx[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+  </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+<script>
+function drawChart() {
+  gc_labels = JSON.parse({{ cg_labels | tojson }})
+  for (let key in gc_labels){
+    var dt = moment.utc(gc_labels[key]).toDate();
+    gc_labels[key] = moment(dt).local().format("MM-DD HH:mm");
+  }
+
+  gc_prices = JSON.parse({{ cg_prices | tojson }}) 
+      // setup  
+  const data = {
+      labels: gc_labels, //['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] gc_labels
+      datasets: [{
+        label: 'Price',
+        data: gc_prices, //[9.33, 12, 6, 9, 12, 3, 9] gc_prices
+      //   backgroundColor: [
+      //     'rgba(255, 26, 104, 0.2)',
+      //     'rgba(54, 162, 235, 0.2)',
+      //     'rgba(255, 206, 86, 0.2)',
+      //     'rgba(75, 192, 192, 0.2)',
+      //     'rgba(153, 102, 255, 0.2)',
+      //     'rgba(255, 159, 64, 0.2)',
+      //     'rgba(0, 0, 0, 0.2)'
+      //   ],
+        fill: {
+          target: {
+              value: gc_prices[0] //gc_prices[0]
+          },
+          below: (context) =>{
+              const chart = context.chart;
+              const { ctx, chartArea, data, scales } = chart;
+              if (!chartArea){
+                  return null;
+              }
+              return belowGradient(ctx, chartArea, data, scales);
+            },
+          above: (context) =>{
+              const chart = context.chart;
+              const { ctx, chartArea, data, scales } = chart;
+              if (!chartArea){
+                  return null;
+              }
+              return aboveGradient(ctx, chartArea, data, scales);
+            },
+        },
+        borderColor: (context) =>{
+          const chart = context.chart;
+          const { ctx, chartArea, data, scales } = chart;
+          if (!chartArea){
+              return null;
+          }
+          return getGradient(ctx, chartArea, data, scales)
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHitRadius: 10,
+        hoverPointRadius: 0
+      }]
+    };
+
+    // dottedLine plugin block
+    const dottedLine = {
+      id: 'dottedLine',
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+          const { ctx, data, chartArea: {left, right, width}, scales: {y, x}  } = chart;
+          ctx.save();
+          ctx.beginPath();
+          ctx.LineWidth = 1;
+          ctx.setLineDash([1, 5]);
+          ctx.strokeStyle = 'rgab(255, 255, 255, 1)';
+          ctx.moveTo(left, y.getPixelForValue(data.datasets[0].data[0]));
+          ctx.lineTo(right, y.getPixelForValue(data.datasets[0].data[0]));
+          ctx.stroke();
+          ctx.closePath();
+          ctx.setLineDash([]);
+      }
+    }
+
+    // config 
+    const config = {
+      type: 'line',
+      data,
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+              ticks:{
+                  color: '#FFFFFF',
+              },
+              beginAtZero: false
+          },
+          x: {
+              ticks: {
+                  maxTicksLimit: 7,
+                  color: '#FFFFFF',
+                  maxRotation: 0,
+                  minRotation: 0,
+                  padding: 18
+              }
+          }
+        },
+        plugins: {
+          legend: {
+              display: false
+          }
+        }
+      },
+      plugins: [dottedLine]
+    };
+
+    // render init block
+    const myCh = new Chart(
+      document.getElementById('myCh'),
+      config
+    );
+}
+
+
+  function getGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBorder = ctx.createLinearGradient(0, 0, 0, bottom);
+    const shift = y.getPixelForValue(data.datasets[0].data[0]) / bottom;
+    gradientBorder.addColorStop(0, 'rgba(2, 229, 38, 1)');
+    gradientBorder.addColorStop(shift, 'rgba(2, 229, 38, 1)');
+    gradientBorder.addColorStop(shift, 'rgba(255, 70, 159, 1)');
+    gradientBorder.addColorStop(1, 'rgba(255, 70, 159, 1)');
+    return gradientBorder;
+  };
+
+  function belowGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBackground = ctx.createLinearGradient(0, y.getPixelForValue(data.datasets[0].data[0]), 0, bottom);
+    gradientBackground.addColorStop(0, 'rgba(255, 70, 159, 0)');
+    gradientBackground.addColorStop(1, 'rgba(255, 70, 159, 0.5)');
+    return gradientBackground;
+  };
+
+  function aboveGradient(ctx, chartArea, data, scales) {
+    const {left, right, top, bottom, width, height} = chartArea;
+    const {x, y} = scales;
+    const gradientBackground = ctx.createLinearGradient(0, y.getPixelForValue(data.datasets[0].data[0]), 0, top);
+    gradientBackground.addColorStop(0, 'rgba(2, 229, 38, 0)');
+    gradientBackground.addColorStop(1, 'rgba(2, 229, 38, 0.5)');
+    return gradientBackground;
+  }
+
+  window.onload = function() {
+    if (window.outerWidth > 900) {
+      console.log(window.outerWidth);
+      Chart.defaults.font.size = 12;
+    } else if ((window.outerWidth <= 900) && (window.outerWidth > 500)) {
+        Chart.defaults.font.size = 10;
+    } else {
+        Chart.defaults.font.size = 7;
+    }
+    drawChart()
+  }
+</script>
+
+{% endblock %}
