@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from helpers import complete_registration, complete_login, login_required, buy_tokens, save_last_quote, get_user_portfolio, get_cash, get_user_transactions
-from cgfunctions import cg_get_data, cg_hist_price, usd, qnt, cg_get_portfolio_history, percent
+from cgfunctions import cg_get_data, cg_hist_price, usd, qnt, cg_get_portfolio_history, percent, cg_get_token_list
 from dbconnect import create_db_connection, execute_query
 from datetime import datetime
 import jinja2
@@ -106,22 +106,26 @@ def create_portfolio():
         cg_prices, cg_labels = cg_hist_price(request.form.get("symbol"))
         cg_prices = json.dumps(cg_prices)
         cg_labels = json.dumps(cg_labels)
+        tokens = cg_get_token_list()
+        tokens = json.dumps(tokens)
 
         # save search results into DB
         save_last_quote(session["user_id"],
                         token_data["symbol"], token_data["price_db"], connection)
-        return render_template("buy.html", token_name=token_data["name"], token_symbol=token_data["symbol"], token_la_price=token_data["last_price"], token_lo_price=token_data["lowest_price"], token_hi_price=token_data["highest_price"], token_vol24=token_data["volume"], token_change24=token_data["change24h"], cg_prices=cg_prices, cg_labels=cg_labels)
+        return render_template("buy.html", token_name=token_data["name"], token_symbol=token_data["symbol"], token_la_price=token_data["last_price"], token_lo_price=token_data["lowest_price"], token_hi_price=token_data["highest_price"], token_vol24=token_data["volume"], token_change24=token_data["change24h"], cg_prices=cg_prices, cg_labels=cg_labels, tokens=tokens)
 
     # in case of get request, get BTC token data from coingecko and then represent it on web page
     token_data = cg_get_data("BTC")
     cg_prices, cg_labels = cg_hist_price("BTC")
     cg_prices = json.dumps(cg_prices)
     cg_labels = json.dumps(cg_labels)
+    tokens = cg_get_token_list()
+    tokens = json.dumps(tokens)
 
     # save search results into DB
     save_last_quote(session["user_id"],
                     token_data["symbol"], token_data["price_db"], connection)
-    return render_template("buy.html", token_name=token_data["name"], token_symbol=token_data["symbol"], token_la_price=token_data["last_price"], token_lo_price=token_data["lowest_price"], token_hi_price=token_data["highest_price"], token_vol24=token_data["volume"], token_change24=token_data["change24h"], cg_prices=cg_prices, cg_labels=cg_labels)
+    return render_template("buy.html", token_name=token_data["name"], token_symbol=token_data["symbol"], token_la_price=token_data["last_price"], token_lo_price=token_data["lowest_price"], token_hi_price=token_data["highest_price"], token_vol24=token_data["volume"], token_change24=token_data["change24h"], cg_prices=cg_prices, cg_labels=cg_labels, tokens=tokens)
     # return render_template("buy_copy.html")
 
 

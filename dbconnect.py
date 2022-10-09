@@ -13,7 +13,6 @@ def create_db_connection(host_name, user_name, user_password, db_name):
             passwd=user_password,
             database=db_name
         )
-        logging.critical('DB CONNECTION - SUCCESS')
     except Error as err:
         print(f"Error: '{err}'")
 
@@ -25,7 +24,6 @@ def execute_query(connection, query):
     try:
         cursor.execute(query)
         connection.commit()
-        print("Query successful")
     except Error as err:
         print(f"Error: '{err}'")
 
@@ -35,7 +33,6 @@ def execute_query_adr(connection, query, adr):
     try:
         cursor.execute(query, adr)
         connection.commit()
-        print("Query successful")
     except Error as err:
         print(f"Error: '{err}'")
 
@@ -66,5 +63,3 @@ def read_query_adr(connection, query, adr):
 #    "database-1.cxksdtctbisg.us-east-1.rds.amazonaws.com", "admin", "London2022!!", "new_schema")
 
 #df = read_query(connection, "SELECT * FROM Users")
-
-# print(df)

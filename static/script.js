@@ -6,6 +6,7 @@ const form = document.getElementById("form")
 const errorElement = document.getElementById('error')
 const tokensToAdd = document.getElementById('tokens_to_add')
 const form_2 = document.getElementById("form_2")
+const symbol = document.getElementById("token")
 
 
 form_2.addEventListener('submit', (e) => {
@@ -17,27 +18,23 @@ form_2.addEventListener('submit', (e) => {
         return value.toString().split(".")[1].length || 0; 
         }
 
+
     if (tta <= 0) {
-        console.log("ERROR")
-        console.log(isNaN(tta))
         messages.push('Number of tokens should be positive')
     }
 
     
     if (tokensToAdd.value === '' || tokensToAdd.value == null) {
-        console.log(tta)
-        console.log("error")
         messages.push('Number of tokens is required')
     }
 
     if (isNaN(tta)){
-        console.log(tta)
-        console.log("error")
-        messages.push('Should be a positive number')
+        e.preventDefault()
+        messages.push('Number of tokens should be positive')
+        errorElement.innerText = messages[0]
     }
 
     if (countDecimals(tta) > 5){
-        console.log("error")
         messages.push('Maximum 5 decimals')
     }
 
@@ -67,4 +64,8 @@ close.addEventListener('click', () => {
 });
 
 
-
+var countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+}

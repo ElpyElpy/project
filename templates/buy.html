@@ -7,6 +7,7 @@
 {% else %}
 <div id="error" class="errors">{{ alert }}</div>
 {% endif %} -->
+<div id="error_2" class="errors"></div>
 <div class="invest">
     <div class="left_side">
         <div class="quote_token">
@@ -15,6 +16,7 @@
                     <input autocomplete="off" autofocus class="form-control
                         mx-auto w-auto" id="token" name="symbol"
                         placeholder="BTC" type="text">
+                    <ul class="tokenlist"></ul>
                 </div>
                 <button class="quote" type="submit">Quote</button>
             </form>
@@ -144,7 +146,6 @@ function drawChart() {
                 value: gc_prices[0] //gc_prices[0]
             },
             below: (context) =>{
-                console.log(context)
                 const chart = context.chart;
                 const { ctx, chartArea, data, scales } = chart;
                 if (!chartArea){
@@ -153,7 +154,6 @@ function drawChart() {
                 return belowGradient(ctx, chartArea, data, scales);
             },
             above: (context) =>{
-                console.log(context)
                 const chart = context.chart;
                 const { ctx, chartArea, data, scales } = chart;
                 if (!chartArea){
@@ -163,7 +163,6 @@ function drawChart() {
             },
         },
         borderColor: (context) =>{
-            console.log(context)
             const chart = context.chart;
             const { ctx, chartArea, data, scales } = chart;
             if (!chartArea){
@@ -276,6 +275,83 @@ function drawChart() {
     drawChart()
   }
 
+
+    // Auto complete token search
+    let names = JSON.parse({{ tokens | tojson }})
+    
+    // sort names in a ascending order
+    let sortedNames = names.sort();
+    
+    // reference
+    let input = document.getElementById("token");
+
+    // execute function on keyup
+    input.addEventListener("keyup", (e) => {
+        // loop through above array
+        // initially remove all elements
+        removeElements();
+        let tCounter = 0;
+        for (let i of sortedNames){
+            // convert input to lower case and compare w/ each array element
+            if (tCounter <= 10){
+                if (i.toLowerCase().startsWith(input.value.toLocaleLowerCase()) && input.value != ""){
+                // create list of elements
+                let listItem = document.createElement("li");
+                listItem.classList.add("list-items");
+                listItem.style.cursor = "pointer";
+                listItem.setAttribute("onclick", "displayNames('"+ i + "')");
+                // display matched part in bold
+                let word = "<b>" + i.substr(0,input.value.length) + "</b>";
+                word+= i.substr(input.value.length);
+                // display the value in array
+                listItem.innerHTML = word;
+                document.querySelector(".tokenlist").appendChild(listItem);
+                tCounter = tCounter + 1;
+                }
+            }
+        }
+    });
+
+    function displayNames(value) {
+        input.value = value;
+        removeElements();
+    }
+
+    function removeElements() {
+        let items = document.querySelectorAll(".list-items");
+        items.forEach((item) => {
+            item.remove();
+        });
+    }
+    
+
+    // CHECK IF TOKEN IS IN THE LIST
+    const symbol_1 = document.getElementById("token")
+    const errorEl = document.getElementById('error_2')
+    const form_buy = document.getElementById("form_buy")
+
+    form_buy.addEventListener('submit', (e) => {
+        let messages = [];
+        let cntTokenExist = 0;
+        let existingTokens = JSON.parse({{ tokens | tojson }})
+        for (let key in existingTokens){
+            if (existingTokens[key] === symbol_1.value){
+                cntTokenExist = cntTokenExist + 1;
+            }
+        }
+
+        if (cntTokenExist === 0){
+            messages.push('symbol does not exist')
+        }
+        
+        if (messages.length > 0) {
+            e.preventDefault()
+            errorEl.innerText = messages[0]
+        }
+    
+    });
+
 </script>
+
 
 {% endblock %}

@@ -32,11 +32,16 @@
                 <img class="logo" src="/static/ASPIS_two_col_logo.svg" alt="ASPIS">
                 {% if session["user_id"] %}
                 <nav>
-                    <ul class="nav_links">
+                    <div class="nav_links">
+                        <a id ="top_menu" href="/">Main</a>
+                        <a id ="top_menu" href="/buy">Add tokens</a>
+                        <a id ="top_menu" href="/portfolio">Portfolio</a>
+                    </div>
+                    <!-- <ul class="nav_links">
                         <li><a id ="top_menu" href="/">Main</a></li>
                         <li><a id ="top_menu" href="/buy">Add tokens</a></li>
                         <li><a id ="top_menu" href="/portfolio">Portfolio</a></li>
-                    </ul>
+                    </ul> -->
                 </nav>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button"

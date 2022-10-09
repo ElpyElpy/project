@@ -59,25 +59,23 @@ body{
     list-style: none;
 }
 
-.nav-bar li, a, button{
+/* TEST */
+.nav_links{
+    display: flex;
+}
+
+.nav_links a{
+    padding: 0px 20px;
     font-weight: 500;
     font-size: 16px;
     color: white;
     text-decoration: none;
-}
-
-.nav_links li {
-    display: inline-block;
-    padding: 0px 20px;
-    margin-top: 20px;
-}
-
-.nav_links li a{
     transition: all 0.3s ease 0s;
     text-decoration: none;
 }
+/* END OF TEST */
 
-.nav_links li a:hover{
+.nav_links a:hover{
     color: rgb(165, 165, 165);
 }
 
@@ -174,6 +172,7 @@ body{
     font-size: 12px;
     color: darkred;
 }
+
 /* END OF REGISTER PAGE */
 
 
@@ -269,18 +268,33 @@ body{
     height: 380px;
 }
 
-
-
 .quote_token {
     border-bottom: 1px solid white;
 }
-
-
 
 .quote_token .mb-3{
     display: inline-block;
     margin-top: 5px;
     border-radius: 10px;
+}
+
+ul{
+    list-style: none;
+}
+
+.tokenlist{
+    background-color: white;
+    border-radius: 0 0 5px 5px;
+    position:absolute;
+    width: 208px;
+}
+
+.list-items{
+    padding: 10px 5px;
+}
+
+.list-items:hover{
+    font-weight: bold;
 }
 
 .quote_token .quote{
@@ -695,18 +709,15 @@ footer a{
         background-color: rgb(255, 255, 255);
         font-size: 12px;
     }
-
-    .nav-bar li, a, button{
+    
+    .nav_links a{
+        padding: 0px 5px;
         font-weight: 500;
         font-size: 12px;
         color: white;
         text-decoration: none;
-    }
-    
-    .nav_links li {
-        display: inline-block;
-        padding: 0px 5px;
-        margin-top: 20px;
+        transition: all 0.3s ease 0s;
+        text-decoration: none;
     }
 
     .logo{
@@ -913,13 +924,15 @@ footer a{
         text-decoration: none;
     }
     
-    .nav_links li {
-        display: none;
-        display: inline-block;
-        padding: 0px 20px;
-        margin-top: 20px;
+    .nav_links a{
+        padding: 0px 5px;
+        font-weight: 500;
+        font-size: 12px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease 0s;
+        text-decoration: none;
     }
-
     .logo{
         cursor: pointer;
         width: 100%;
