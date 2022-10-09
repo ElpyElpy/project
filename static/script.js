@@ -47,25 +47,7 @@ form_2.addEventListener('submit', (e) => {
 
 
 
-// Modal view for buying tokens
-const open = document.getElementById('open');
-const close = document.getElementById('close');
-const modal_container = document.getElementById('modal_container');
 
 
-open.addEventListener('click', () => {
-    modal_container.classList.add("show");
-
-});
-
-close.addEventListener('click', () => {
-    modal_container.classList.remove("show");
-
-});
 
 
-var countDecimals = function(value) {
-    if (Math.floor(value) !== value)
-        return value.toString().split(".")[1].length || 0;
-    return 0;
-}

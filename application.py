@@ -103,6 +103,13 @@ def create_portfolio():
     # in case of post request, get token data (prompted by user) from coingecko and then represent it on web page
     if request.method == "POST":
         token_data = cg_get_data(request.form.get("symbol"))
+        if token_data == 'There are no pair with usdt':
+            cg_prices = json.dumps([1, 2, 3])
+            cg_labels = json.dumps(['No data', 'No data', 'No data'])
+            tokens = cg_get_token_list()
+            tokens = json.dumps(tokens)
+            return render_template("buy.html", token_name="No data", token_symbol=' ', token_la_price='Choose another token', token_lo_price='No data', token_hi_price='No data', token_vol24='No data', token_change24='No data', cg_prices=cg_prices, cg_labels=cg_labels, tokens=tokens)
+
         cg_prices, cg_labels = cg_hist_price(request.form.get("symbol"))
         cg_prices = json.dumps(cg_prices)
         cg_labels = json.dumps(cg_labels)
@@ -129,8 +136,8 @@ def create_portfolio():
     # return render_template("buy_copy.html")
 
 
-@application.route("/add_to_portfolio", methods=["GET", "POST"])
-@login_required
+@ application.route("/add_to_portfolio", methods=["GET", "POST"])
+@ login_required
 def add_token_to_portfolio():
     if request.method == "POST":
         # calculate sum of transaction
@@ -145,8 +152,8 @@ def add_token_to_portfolio():
         return redirect("/portfolio")
 
 
-@application.route("/portfolio", methods=["GET", "POST"])
-@login_required
+@ application.route("/portfolio", methods=["GET", "POST"])
+@ login_required
 def show_portfolio():
     # get data for portfolio table
     balance, change = get_user_portfolio(connection, session["user_id"])

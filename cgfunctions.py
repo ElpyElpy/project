@@ -57,14 +57,13 @@ def cg_get_data(symbol):
     symbol = symbol.lower()
     cw.api_key = get_api_key()
     curr = "usdt"
-
     # exchanges = ['binance:', 'coinbase-pro:']
     # exchanges = ['coinbase-pro:', 'binance:']
     exchanges = ['coinbase-pro:', 'binance:', 'ftx:', 'binance-us:', 'huobi:', 'kraken:',
                  'uniswap-v2:', 'dex-aggregated:', 'bitflyer:', 'bittrex:', 'gemini:',
                  'luno:', 'gateio:', 'bitfinex:', 'cexio:', 'bisq:', 'bitmex:', 'okex:',
                  'liquid:', 'quoine:', 'bitbay:', 'hitbtc:', 'poloniex:', 'bitstamp:',
-                 'bitz:', 'bithumb:', 'coinone:', 'okcoin:']
+                 'bitz:', 'bithumb:', 'coinone:', 'okcoin:', 'dummy-exchange:']
     # exchange = 'coinbase-pro:'
     for exchange in exchanges:
         pair = exchange + symbol + curr
@@ -72,6 +71,10 @@ def cg_get_data(symbol):
         try:
             summary = cw.markets.get(pair)
         except:
+            if exchange == exchanges[-1]:
+                token_data = 'There are no pair with usdt'
+                return token_data
+
             continue
 
         # get main symbol statistics
@@ -132,6 +135,7 @@ def cg_hist_price(symbol, time_delta=None):
             cg_prices.append(candle[1])
             cg_labels.append(datetime.utcfromtimestamp(
                 int(candle[0])).strftime('%Y-%m-%d %H:%M:%S'))
+
         return cg_prices, cg_labels
 
 

@@ -329,6 +329,36 @@ function drawChart() {
     const symbol_1 = document.getElementById("token")
     const errorEl = document.getElementById('error_2')
     const form_buy = document.getElementById("form_buy")
+    const pre_buy = document.getElementById("open")
+
+    pre_buy.addEventListener('click', (e) => {
+        let messages = [];
+        let err_message = {{ token_name | tojson  }};
+        
+        if (err_message === 'No data') {
+            messages.push('choose another token')
+            e.preventDefault()
+            errorEl.innerText = messages[0]
+        } else{
+            // Modal view for buying tokens
+            const open = document.getElementById('open');
+            const close = document.getElementById('close');
+            const modal_container = document.getElementById('modal_container');
+
+            modal_container.classList.add("show");
+
+            close.addEventListener('click', () => {
+                modal_container.classList.remove("show");
+
+            });
+
+            var countDecimals = function(value) {
+                if (Math.floor(value) !== value)
+                    return value.toString().split(".")[1].length || 0;
+                return 0;
+            }
+        }
+    });
 
     form_buy.addEventListener('submit', (e) => {
         let messages = [];
