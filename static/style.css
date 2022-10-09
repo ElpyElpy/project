@@ -626,7 +626,6 @@ ul{
 
 /* IN CASE THERE ARE NO PORTFOLIO */
 .empty_portfolio{
-    
     align-items: center;
     justify-content: center;
     margin: 0 auto;
@@ -640,6 +639,12 @@ ul{
     display: flex;
     justify-content: center;
     
+}
+
+.empty_button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .empty_buy button {
