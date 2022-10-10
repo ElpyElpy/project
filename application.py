@@ -27,7 +27,7 @@ application.config["SESSION_PERMANENT"] = True
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
-
+# connect to the DB
 if 'RDS_DB_NAME' in os.environ:
     logging.critical('ENVIRONMENT CREDENTIAL VARS IN USE')
     RDS_HOSTNAME = os.environ["RDS_HOSTNAME"]
